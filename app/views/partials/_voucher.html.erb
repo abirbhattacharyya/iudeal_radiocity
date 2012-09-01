@@ -1,0 +1,21 @@
+<% @payment = voucher %>
+
+<div class="capsule3 w550px">
+
+    <h2>Coupon# <%=@payment.promotion_code.code %> <span class="exp">Expires at 04/30/11</span></h2>
+
+    <div class="divider"></div>
+
+    <div class="cinner">
+
+        <img class="phone" src="/images/icons/ico-phone.gif" alt=""/>
+        <p>
+          Your Price: <%= (@payment.price > 0) ? number_to_currency(@payment.price, :precision => 2) : "Free" %>
+        </p>
+        <p>
+            <b><%= @payment.product.show_name %></b><br /><br />
+        </p>
+
+    </div><!-- .cinner -->
+
+</div><!-- .capsule3.terms -->

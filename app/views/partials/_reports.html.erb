@@ -1,0 +1,60 @@
+<h1>Reports</h1>
+<% today_analytics_details = analytics_details(@today - 1.day , @today)%>
+<% cumulative_analytics_details = analytics_details(@start_date, @today)%>
+<%
+today_total_time = today_analytics_details["timeOnSite"].to_i
+today_hours = (today_total_time/3600).to_i
+today_min = (today_total_time/60 - today_hours * 60).to_i
+today_sec = (today_total_time  - (today_min * 60 + today_hours * 3600)).to_i
+
+cumulative_total_time = cumulative_analytics_details["timeOnSite"].to_i
+cumulative_hours = (cumulative_total_time/3600).to_i
+cumulative_min = (cumulative_total_time/60 - cumulative_hours * 60).to_i
+cumulative_sec = (cumulative_total_time  - (cumulative_min * 60 + cumulative_hours * 3600)).to_i
+
+
+%>    
+<table border=1 width = "90%" class="t_border">
+    <colgroup>
+        <col style="text-align: right;"></col>
+        <col style="text-align: right;"></col>
+        <col style="text-align: right;"></col>
+    </colgroup>
+
+    <tr>
+        <th style="text-align: center; font-weight:bold;">&nbsp;</th>
+        <th style="text-align: center; font-weight:bold;">Today</th>
+        <th style="text-align: center; font-weight:bold;">Cumulative</th>
+    </tr>
+    <tr>
+        <td><b># of Views</b></td>
+        <td style="text-align: right;"><%=today_analytics_details["pageviews"]%></td>           
+        <td style="text-align: right;"><%=cumulative_analytics_details["pageviews"]%></td>           
+    </tr>
+    <tr>
+        <td><b># of Visits</b></td>
+        <td style="text-align: right;"><%=today_analytics_details["visits"]%></td>           
+        <td style="text-align: right;"><%=cumulative_analytics_details["visits"]%></td>           
+    </tr>
+    <tr>
+        <td><b>Total Time on Site</b></td>
+        <td style="text-align: right;"><%="#{today_hours.to_s.rjust(2,'0')}:#{today_min.to_s.rjust(2,'0')}:#{today_sec.to_s.rjust(2,'0')}"%></td>   
+        <td style="text-align: right;"><%="#{cumulative_hours.to_s.rjust(2,'0')}:#{cumulative_min.to_s.rjust(2,'0')}:#{cumulative_sec.to_s.rjust(2,'0')}"%></td>   
+    </tr>
+    <tr>
+        <td><b># Negotitions</b></td>
+        <td style="text-align: right;"><%=(@today_negotiations.total.to_i/2).ceil%></td>
+        <td style="text-align: right;"><%=(@cumulative_negotiations.total.to_i/2).ceil%></td>
+    </tr>
+    <tr>
+        <td><b># of Sales</b></td>
+        <td style="text-align: right;"><%=@today_total_sales%></td>
+        <td style="text-align: right;"><%=@cumulative_total_sales%></td>
+    </tr>
+    <tr>
+        <td><b>$ Sales</b></td>
+        <td style="text-align: right;">$<%=with_delimiter(@today_sales)%></td>
+        <td style="text-align: right;">$<%=with_delimiter(@cumulative_sales)%></td>
+    </tr>
+</table>
+

@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Language" content="en-us" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <meta name="description" content="">
+
+    <title>Radiocity IUDeal</title>
+    <%= stylesheet_link_tag "reset", "global", "notification", "jquery.lightbox-0.5" %>
+
+    <%= javascript_include_tag "application","common", "jquery-1.7.2.min", "jquery.bar","global"%>
+    <%= javascript_include_tag "jquery.lightbox-0.5.min" %>
+    <link rel="icon"  type="image/png" href="/assets/favicon.ico" />
+    <% javascript_tag do %>
+        jQuery.noConflict();
+    <% end %>
+    
+    <%= yield :head %>
+  </head>
+
+  <body class="<%=set_body_class%>">
+    <%= content_tag(:div, nil, :id => "notification", :class => "message-notification") %>
+    <div class="page-layout">
+        <div class="page-header">
+            <a class="logo" href="/">MyLogo</a>            
+        </div><!-- #header -->
+        <div class="page-controls">
+            <ul>
+              <% if request.path != root_path%>
+                <li><%=link_to "Home",root_path,:class=> "mitem home"%></li>
+              <%end%>
+              <li><%=link_to "Play a spectacular game",capsule_path(1),:class=> "mitem play"%></li>
+              <li><%=link_to "Show Your Christmas Spirit",christmas_spirit_path,:class=> "mitem hspirit"%></li>                
+            </ul>
+        </div><!-- #footer -->
+
+        <%=content_tag :div, :class=> "page-content" do %>
+            <%=yield%>
+        <% end %>        
+    </div><!-- #layout -->
+    <% if flash[:error] or flash[:notice] %>
+      <%=javascript_tag do %>
+          showNotification("<%= flash[:error] || flash[:notice] %>", 'error', 10000);
+          <% flash.discard %>
+      <% end %>
+    <% end %>
+  </body>
+  <script type="text/javascript">
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-33143920-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+</script>
+</html>

@@ -1,0 +1,25 @@
+<%
+ product = @payment.offer.product
+ price = product.max_price
+ %>
+
+
+ <ul class="offers">
+        <li class="oitem">
+            <i><%=image_tag(product.image.url(:medium,false))%></i>
+            <span>
+                <strong>
+                    <%=product.show_name%><br/>
+                    Barnes & Noble, Inc. <br/>1-800-THE-BOOK (1-800-843-2665)
+                </strong>
+                <hr/>
+                <p class="descr">
+                    Your Purchase Details<br/>
+                    <br/>
+                    <%= number_to_currency(@payment.price, :precision => 2) %> Total<br/>
+                    <br/>                    
+                </p>
+            </span>
+        </li>
+    </ul>
+

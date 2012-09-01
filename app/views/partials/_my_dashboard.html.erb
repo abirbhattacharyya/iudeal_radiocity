@@ -1,0 +1,7 @@
+<% content_tag :div, :class => "fixed-side-ctrls" do %>
+    <% content_tag :ul do %>
+        <%= content_tag(:li, link_to("<b></b>" + content_tag(:span, "Notifications", :class => "w140px") + "<i></i>", notifications_path, :class => "button-green clickable hover-state ".concat(([notifications_path, root_path].include? request.path) ? "current" : ""))) %>
+        <%= content_tag(:li, link_to("<b></b>" + content_tag(:span, "New Product", :class => "w140px") + "<i></i>", product_catalog_path, :class => "button-green clickable hover-state ".concat(([product_catalog_path].include? request.path) ? "current" : ""))) %>
+        <%#= content_tag(:li, link_to("<b></b>" + content_tag(:span, "Analytics", :class => "w140px") + "<i></i>", analytics_path, :class => "button-green clickable hover-state ".concat(([analytics_path].include? request.path) ? "current" : ""))) %>
+    <% end %>
+<% end %>

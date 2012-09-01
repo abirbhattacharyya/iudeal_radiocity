@@ -1,0 +1,87 @@
+<script type="text/javascript">
+    jQuery(function() {
+        jQuery('.visual a').lightBox();
+    });
+</script>
+<% 
+  offer_token = (session[:_csrf_token] ||= SecureRandom.base64(32))
+  ip = request.remote_ip
+  @last_offer = @product.last_offer(ip,offer_token)
+ %>
+
+<h1><%=@message || (@product.show_name)%></h1>
+  <div class="offer">
+
+    <div class="visual">
+      <%= link_to(image_tag(@product.image.url(:original,false), :size => "215x290", :alt => @product.name), @product.image.url(:medium,false), :class => "hover-state",  :title => @product.name) %>
+    </div>
+    <div class="descr">
+        <div class="price old"><%=number_to_currency(@product.max_price, :precision => 2)%></div>
+        <div class="price new"><%=number_to_currency(@last_offer.try(:price) || @product.regular_price, :precision => 2)%></div>
+
+        <p class="controls">
+            <%= form_tag capsule_path(@product.id), :id => "submit_form" do %>
+
+              <%= hidden_field_tag(:submit_button, "buy") %>
+                <%= hidden_field_tag(:id, @product.id) %>
+                <%if @last_offer and  @last_offer.share?%>
+                    <% title = "Want even more spectacular deals? Why not share on Twitter/FB"%>
+                    <%= link_to("Share Facebook", "javascript:;", :onclick => "share_product('facebook','#{capsule_url(@product)}','#{title}',#{@product.id});",:class => "btn-share fb") %>
+                    &nbsp;
+                    <%= link_to("Share Twitter", "javascript:;", :onclick => "share_product('twitter','#{capsule_url(@product)}','#{CGI.escape(title)}',#{@product.id});",:class => "btn-share tw") %>
+                    &nbsp;
+                <%else%>
+                    <%= link_to("Yes","javascript:;", :class => "button-short green", :onclick => "submit_data('#{make_payment_path}','buy'); return false;") %>
+                    <%= link_to("No","javascript:;", :class => "button-short red",  :onclick => "submit_data('#{capsule_path(@product.id)}','no'); return false;") if(@last_offer.nil? or (@last_offer and !@last_offer.last?)) %>
+                <%end%>
+            <%end%>
+           
+        </p>
+    </div>
+
+</div><!-- .offer -->
+
+
+<script type="text/javascript">
+  function submit_data(action,submit_value){
+    var f = document.forms['submit_form'];
+    f.action = action;
+    $('#submit_button').val(submit_value);
+    f.submit();
+
+    return false;
+  }
+
+  function share_product(provider,url,title,product){
+    var sharing_url;
+    if (provider == "facebook"){
+      sharing_url= "http://www.facebook.com/sharer.php?u="+ url + "&t=" + title
+    }
+    if (provider == "twitter"){
+      sharing_url= "http://twitter.com/home?status=" + title + " " + url
+    }
+    $.ajax({
+      type: 'post',
+      data: {id: product},
+      headers: {
+        'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
+      },
+      complete: function(request){},
+      url: "<%= share_product_path%>"
+    })
+     
+    var popupWidth = 820
+    var popupHeight = 420
+    popup(sharing_url, "sharing page", popupWidth, popupHeight);
+  }
+
+function popup(pageURL, title, popupWidth, popupHeight)
+    {
+        var left = (screen.width / 2) - (popupWidth / 2);
+        var top = (screen.height / 2) - (popupHeight / 2);
+         targetPop = window.open(pageURL, title, "toolbar=no, location=no, directories=no,status=no, menubar=no, scrollbars=YES, resizable=YES, copyhistory=no, width=" + popupWidth + ',height=' + popupHeight + ', top=' + top + ', left=' + left);
+    if (window.focus) {targetPop.focus()}
+    return false;
+    }
+
+ </script>

@@ -1,0 +1,23 @@
+
+<ul class="offers">
+   <%unless @products.empty?%>
+    <%@products.each do |product|%>
+    <%
+      offer_token = (session[:_csrf_token] ||= SecureRandom.base64(32))
+      ip = request.remote_ip
+      #@last_offer = product.last_offer(ip,offer_token)
+    %>  
+      <li class="oitem">
+        <a href="<%=capsule_path(product.id)%>">
+            <i><%=image_tag(product.image.url(:medium,false))%></i>
+            <span>
+                <strong><%=product.show_name%></strong>
+                <big><%=number_to_currency(@last_offer.try(:price) || product.regular_price, :precision => 2)%><em><%=number_to_currency(product.max_price, :precision => 2)%></em></big>
+                <small>Tonight</small>
+                <legend> Peak or Non-Peak</legend>
+            </span>
+        </a>
+      </li>
+    <%end%>
+   <%end%>
+</ul>
